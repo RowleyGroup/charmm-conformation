@@ -1,0 +1,28 @@
+* settings for REMD conformation serarch
+*
+
+! edit these variables to change the execution options
+
+set NREPLICAS = 20          ! number of replicas in the simulation
+set LOWT = 50               ! lowest temperature replica
+set HIGHT = 400             ! highest temperature replica
+set NSTEPS = 1000000        ! number of time steps to simulation
+set XFREQ = 100             ! number of steps between replica exchange attempts
+set QM = 0                  ! set QM to 1 if you want to perform a conformational
+                            ! searching using a semi-empirical QM method
+
+! advanced options
+set QMCHARGE = 0            ! sets the net charge of the QM region
+set QMMETHOD = 'pm3'        ! species the QM method to use (am1, pm3, or mndo)
+
+! make a copy of equil_inp for each replica
+
+if ?mynode .eq. 0 then
+
+set i 0
+label loop1
+system "cp equil_inp equil_inp_@I"
+incr i
+if @i .LT. @NREPLICAS goto loop1
+
+endif

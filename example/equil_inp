@@ -1,0 +1,21 @@
+if QM .eq. 1 then
+  squantum remove select all end @QMMETHOD charge @QMCHARGE
+endif
+
+dynamics lang leap start time 0.001 nstep @NSTEPS
+    IUNREA 24 IUNWRI 25 IUNCRD -1 IUNVEL -1 KUNIT -1 isvfrq 1000 -
+    NPRINT 500 NSAVC 1000 NSAVV 0 IHBFRQ 0 INBFRQ -1   imgfrq -1 -
+    IASORS 0 IASVEL 1 ISCVEL 0 ICHECW 0 TWINDH 0.0 TWINDL 0.0 -
+    echeck 100000000.0
+
+mini abnr nstep 1000 
+energy
+
+coor stat select segid MOL end
+coor trans XDIR -?XAVE YDIR -?YAVE ZDIR -?ZAVE
+
+write coor pdb name min_pdb 
+* ?ener
+
+
+stop

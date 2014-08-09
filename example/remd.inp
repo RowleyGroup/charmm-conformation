@@ -1,0 +1,40 @@
+* REMD
+*
+
+bomlev -2
+
+! names of rtf and prm files for molecules
+
+read rtf card name mol.rtf
+read param card name mol.prm
+
+! names of  psf and coordinate files
+
+read psf card name mol.psf
+read coor card name mol.crd
+
+stream settings.str
+
+shake bonh param -
+   nofast
+
+energy
+
+! set frictional coefficient on atoms for Langevin dynamics
+scalar fbeta set 50.0 select all end
+
+! translate molecule to center of mass
+
+coor stat select segid MOL end
+coor trans XDIR -?XAVE YDIR -?YAVE ZDIR -?ZAVE
+
+! restrain center of mass of molecule to origin
+
+cons hmcm refx 0.0 refy 0.0 refz 0.0 force 1.0  select segid MOL end
+
+REPDSTR NREP @NREPLICAS EXCH STEM @LOWT MTEM @HIGHT FREQ @XFREQ
+
+open write unit 1 card name equil_out
+outu 1
+stream equil_inp
+
